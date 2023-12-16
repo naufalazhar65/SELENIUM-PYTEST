@@ -16,12 +16,12 @@ def driver():
     options.add_argument('--headless')
     driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
     driver.implicitly_wait(15)
+    driver.maximize_window()
     yield driver
     driver.quit()
 
 def test_valid_registration(driver):
     driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")
-    driver.maximize_window()
     
     assert 'Register Account' in driver.title
 
@@ -57,9 +57,7 @@ def test_valid_registration(driver):
 
 
 def test_existing_email_registration(driver):
-    driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")
-    driver.maximize_window()
-    
+    driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")    
     assert 'Register Account' in driver.title
 
     input_firstName = driver.find_element(By.ID, "input-firstname")
@@ -93,9 +91,7 @@ def test_existing_email_registration(driver):
     assert error_msg in driver.find_element(By.XPATH, '//body/div[1]/div[5]/div[1]/div[1]').text
 
 def test_mismatched_passwords_registration(driver):
-    driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")
-    driver.maximize_window()
-    
+    driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")    
     assert 'Register Account' in driver.title
 
     input_firstName = driver.find_element(By.ID, "input-firstname")

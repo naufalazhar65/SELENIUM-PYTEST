@@ -16,12 +16,12 @@ def driver():
     options.add_argument('--headless')
     driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
     driver.implicitly_wait(15)
+    driver.maximize_window()
     yield driver
     driver.quit()
 
 def test_forgot_password(driver):
     driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
-    driver.maximize_window()
 
     driver.find_element(By.LINK_TEXT, 'Forgotten Password').click()
     assert driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/forgotten"

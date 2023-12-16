@@ -16,12 +16,12 @@ def driver():
     options.add_argument('--headless')
     driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
     driver.implicitly_wait(15)
+    driver.maximize_window()
     yield driver
     driver.quit()
 
 def test_valid_login(driver):
     driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
-    driver.maximize_window()
     
 
     assert 'Account Login' in driver.title
