@@ -23,14 +23,7 @@ def driver():
 def test_valid_login(driver):
     driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
     
-
     assert 'Account Login' in driver.title
-
-    # Input valid email and password
-    # input_email = driver.find_element(By.ID, "input-email")
-    # input_password = driver.find_element(By.ID, "input-password")
-    # input_email.send_keys("naufalazhar65@gmail.com")
-    # input_password.send_keys("naufal354")
 
     input_email = driver.find_element(By.ID, "input-email")
     input_password = driver.find_element(By.ID, "input-password")
