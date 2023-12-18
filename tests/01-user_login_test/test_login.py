@@ -27,10 +27,22 @@ def test_valid_login(driver):
     assert 'Account Login' in driver.title
 
     # Input valid email and password
+    # input_email = driver.find_element(By.ID, "input-email")
+    # input_password = driver.find_element(By.ID, "input-password")
+    # input_email.send_keys("naufalazhar65@gmail.com")
+    # input_password.send_keys("naufal354")
+
     input_email = driver.find_element(By.ID, "input-email")
     input_password = driver.find_element(By.ID, "input-password")
+
     input_email.send_keys("naufalazhar65@gmail.com")
     input_password.send_keys("naufal354")
+
+    print(f"Email input value is: {input_email.get_attribute('value')}")
+    assert input_email.get_attribute('value') == "naufalazhar65@gmail.com", f"Email input value mismatch. Actual: {input_email.get_attribute('value')}"
+
+    print(f"Password input value is: {input_password.get_attribute('value')}")
+    assert input_password.get_attribute('value') == "naufal354", f"Password input value mismatch. Actual: {input_password.get_attribute('value')}"
 
     login_button = driver.find_element(By.XPATH, '/html/body/div[1]/div[5]/div[1]/div/div/div/div[2]/div/div/form/input')
     login_button.click()
