@@ -35,7 +35,7 @@ def test_valid_registration(driver):
 
     input_firstName.send_keys("Naufal")
     input_lastName.send_keys("Azhar")
-    input_email.send_keys("naufal4@gmail.com")
+    input_email.send_keys("naufal5@gmail.com")
     input_telp.send_keys("012332532")
     input_password.send_keys("naufal354")
     input_confirm_password.send_keys("naufal354")

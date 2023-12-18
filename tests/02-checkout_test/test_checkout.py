@@ -13,7 +13,7 @@ def driver():
     options = Options()
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
     driver.implicitly_wait(15)
     driver.maximize_window()
@@ -61,23 +61,56 @@ def test_checkout(driver):
     verify_product_list_2 = driver.find_element(By.XPATH, '//body[1]/div[1]/div[5]/div[1]/div[1]/div[1]/form[1]/div[1]/div[2]/div[1]/div[1]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/a[1]')
     assert verify_product_list_2.text == 'iMac'
 
+    check_btn = driver.find_element(By.XPATH, "//body/div[1]/div[5]/div[1]/div[1]/div[1]/form[1]/div[1]/div[2]/div[1]/div[5]/label[1]")
+    check_btn.click()
+
+    continue_btn = driver.find_element(By.XPATH, "//button[@id='button-save']")
+    continue_btn.click()
+    sleep(3)
+
+    ### VERIFY USER IS NAVIGATED TO CONFIRM ORDER PAGE ###
+
+    assert driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=extension/maza/checkout/confirm"
+    get_title = "Confirm Order"
+    assert get_title in driver.title
+    assert "Confirm Order" in driver.page_source
+    assert "Payment Address" in driver.page_source
+    assert "Shipping Address" in driver.page_source
+    assert "Shipping Method:" in driver.page_source
+
+    product_information = driver.find_element(By.CLASS_NAME, 'table-bordered')
+    assert product_information.is_displayed()
+    assert "HTC Touch HD" in product_information.text
+    assert "iMac" in product_information.text
+
+    tbody = driver.find_element(By.XPATH, '//table/tbody')
+    rows_at_index_2 = tbody.find_elements(By.XPATH, './tr')
+    expected_length = 2
+    assert len(rows_at_index_2) == expected_length, f"Expected length: {expected_length}, Actual length: {len(rows_at_index_2)}"
+
+    # Payment Address
+    card_bodies = driver.find_elements(By.CLASS_NAME, 'card-body')
+    expected_text = 'Naufal Azhar\nPt.mamkmur\njalan1\njalan2\njakarta 1234\nJawa Barat,Indonesia'
+    actual_text = card_bodies[0].text
+    assert expected_text == actual_text, f"Expected: {expected_text}, Actual: {actual_text}"
+
+    # Shipping Address
+    expected_text = 'Naufal Azhar\nPt.mamkmur\njalan1\njalan2\njakarta 1234\nJawa Barat,Indonesia'
+    actual_text = card_bodies[1].text
+    assert expected_text == actual_text, f"Expected: {expected_text}, Actual: {actual_text}"
+
+    # Shipping Method
+    expected_text = 'Flat Shipping Rate'
+    actual_text = card_bodies[2].text
+    assert expected_text == actual_text, f"Expected: {expected_text}, Actual: {actual_text}"
+
+    confirm_btn = driver.find_element(By.XPATH, "//button[@id='button-confirm']")
+    confirm_btn.click()
+    sleep(3)
+    
+    assert driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=checkout/success"
+    assert "Your order has been placed!" in driver.title
+    success_msg = "Your order has been placed!"
+    assert success_msg in driver.find_element(By.TAG_NAME, "h1").text
+    assert "Your order has been successfully processed!" in driver.page_source
     sleep(5)
-
-
-
-
-    # element = self.driver.find_element(By.LINK_TEXT, "HTC Touch HD")
-    # actions = ActionChains(self.driver)
-    # actions.move_to_element(element).perform()
-    # element = self.driver.find_element(By.CSS_SELECTOR, "body")
-    # actions = ActionChains(self.driver)
-    # actions.move_to_element(element, 0, 0).perform()
-    # self.driver.find_element(By.LINK_TEXT, "Checkout").click()
-    # self.driver.find_element(By.NAME, "address_id").click()
-    # self.driver.find_element(By.CSS_SELECTOR, ".custom-control:nth-child(5) > .custom-control-label").click()
-    # self.driver.find_element(By.CSS_SELECTOR, ".custom-control:nth-child(5) > .custom-control-label").click()
-    # self.driver.find_element(By.ID, "input-comment").click()
-    # self.driver.find_element(By.ID, "input-comment").send_keys("hallo")
-    # self.driver.find_element(By.CSS_SELECTOR, ".custom-control:nth-child(6) > .custom-control-label").click()
-    # self.driver.find_element(By.ID, "button-save").click()
-  
