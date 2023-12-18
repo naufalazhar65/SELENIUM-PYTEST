@@ -107,9 +107,10 @@ def test_checkout(driver):
     confirm_btn = driver.find_element(By.XPATH, "//button[@id='button-confirm']")
     confirm_btn.click()
     sleep(3)
-    
+
     assert driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=checkout/success"
     assert "Your order has been placed!" in driver.title
+    
     success_msg = "Your order has been placed!"
     assert success_msg in driver.find_element(By.TAG_NAME, "h1").text
     assert "Your order has been successfully processed!" in driver.page_source
