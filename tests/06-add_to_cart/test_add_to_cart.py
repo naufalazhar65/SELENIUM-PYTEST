@@ -12,9 +12,11 @@ def driver():
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
     # options.add_argument('--headless')
+    
     driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
     driver.implicitly_wait(15)
     driver.maximize_window()
+    
     yield driver
     driver.quit()
 
@@ -41,3 +43,40 @@ def test_add_product_to_cart(driver):
     verify_cart_badge_num = "1"
     cart_badge_num = driver.find_element(By.CLASS_NAME, 'cart-icon').text
     assert verify_cart_badge_num in cart_badge_num
+
+def test_remove_product_from_cart(driver):
+    # Open the website
+    driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=common/home")
+
+    # Select a product
+    select_product = driver.find_element(By.XPATH, "//a[@id='mz-product-listing-image-37213259-0-1']")
+    select_product.click()
+
+    # Add the product to the cart
+    add_cart_btn = driver.find_element(By.XPATH, "//div[@id='entry_216842']")
+    assert add_cart_btn.is_displayed()
+    add_cart_btn.click()
+    sleep(2)
+
+    driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart")
+    sleep(2)
+
+    assert driver.current_url == "https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart"
+
+    remove_btn = driver.find_element(By.CLASS_NAME, 'btn-danger')
+    assert remove_btn.is_displayed()
+    remove_btn.click()
+
+    sleep(2)
+
+    # Verify success message
+    success_msg = "Your shopping cart is empty!"
+    assert success_msg in driver.page_source
+
+    # Verify the cart badge number
+    verify_cart_badge_num = "0"
+    cart_badge_num = driver.find_element(By.CLASS_NAME, 'cart-icon').text
+
+    assert verify_cart_badge_num in cart_badge_num
+
+    print(f"cart value is: {cart_badge_num}")
