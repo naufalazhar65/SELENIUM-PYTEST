@@ -1,27 +1,23 @@
-import pytest
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+
 from time import sleep
 
-@pytest.fixture
-def driver():
-    options = Options()
-    options.add_argument('--ignore-certificate-errors')
-    options.add_argument('--ignore-ssl-errors')
-    options.add_argument('--headless')
-    driver = webdriver.Chrome(options=options, service=ChromeService(ChromeDriverManager().install()))
-    driver.implicitly_wait(15)
-    driver.maximize_window()
-    yield driver
-    driver.quit()
+BASE_URL = ("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")
+
+FIRST_NAME = ("Naufal")
+LAST_NAME = ("Azhar")
+EMAIL = ("naufalazhar858@gmail.com")
+TELP = ("08161363")
+PASSWORD = ("123456")
+CONFIRM_PASSWORD = ("123456")
 
 def test_valid_registration(driver):
     # Test for a valid registration
 
-    driver.get("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")
+    driver.get(BASE_URL)
 
     assert 'Register Account' in driver.title
 
@@ -33,21 +29,33 @@ def test_valid_registration(driver):
     input_password = driver.find_element(By.ID, "input-password")
     input_confirm_password = driver.find_element(By.ID, "input-confirm")
 
-    input_firstName.send_keys("Naufal")
-    input_lastName.send_keys("Azhar")
-    input_email.send_keys("naufal5@gmail.com")
-    input_telp.send_keys("012332532")
-    input_password.send_keys("naufal354")
-    input_confirm_password.send_keys("naufal354")
+    input_firstName.send_keys(FIRST_NAME)
+    input_lastName.send_keys(LAST_NAME)
+    input_email.send_keys(EMAIL)
+    input_telp.send_keys(TELP)
+    input_password.send_keys(PASSWORD)
+    input_confirm_password.send_keys(CONFIRM_PASSWORD)
 
     # Select options
-    rd_btn = driver.find_element(By.XPATH, "//label[contains(text(),'Yes')]")
-    rd_btn.click()
-    rd_btn.is_selected(), "Select Yes"
+    label = driver.find_element(By.XPATH, "//label[normalize-space()='Yes']")
+    label.click()
 
-    check_btn = driver.find_element(By.XPATH, "//body/div[1]/div[5]/div[1]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/label[1]")
-    check_btn.click()
-    check_btn.is_selected(), "Check Agree"
+    radio = driver.find_element(By.XPATH, "//input[@name='newsletter' and @value='1']")
+    if radio.is_selected():
+        print("Radio is selected.")
+    else:
+        print("Radiio is NOT selected.")
+    assert radio.is_selected()
+
+    label_agree = driver.find_element(By.XPATH, "//label[@for='input-agree']")
+    label_agree.click()
+
+    check_agree = driver.find_element(By.XPATH, "//input[@name='agree' and @value='1']")
+    if check_agree.is_selected():
+        print("Checkbox is selected.")
+    else:
+        print("Checkbox is NOT selected.")
+    assert check_agree.is_selected()
 
     # Continue with registration
     continue_btn = driver.find_element(By.XPATH, '//body/div[1]/div[5]/div[1]/div[1]/div[1]/form[1]/div[1]/div[1]/input[1]')
@@ -74,21 +82,34 @@ def test_existing_email_registration(driver):
     input_password = driver.find_element(By.ID, "input-password")
     input_confirm_password = driver.find_element(By.ID, "input-confirm")
 
-    input_firstName.send_keys("name1")
-    input_lastName.send_keys("name2")
-    input_email.send_keys("naufal2@gmail.com")
-    input_telp.send_keys("873627572")
-    input_password.send_keys("password123")
-    input_confirm_password.send_keys("password123")
+    input_firstName.send_keys(FIRST_NAME)
+    input_lastName.send_keys(LAST_NAME)
+    input_email.send_keys(EMAIL)
+    input_telp.send_keys(TELP)
+    input_password.send_keys(PASSWORD)
+    input_confirm_password.send_keys(CONFIRM_PASSWORD)
 
     # Select options
-    rd_btn = driver.find_element(By.XPATH, "//label[contains(text(),'Yes')]")
-    rd_btn.click()
-    print("Select Yes", rd_btn.is_selected())
 
-    check_btn = driver.find_element(By.XPATH, "//body/div[1]/div[5]/div[1]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/label[1]")
-    check_btn.click()
-    print("Check Agree", check_btn.is_selected())
+    label = driver.find_element(By.XPATH, "//label[normalize-space()='Yes']")
+    label.click()
+
+    radio = driver.find_element(By.XPATH, "//input[@name='newsletter' and @value='1']")
+    if radio.is_selected():
+        print("Radio is selected.")
+    else:
+        print("Radiio is NOT selected.")
+    assert radio.is_selected()
+
+    label_agree = driver.find_element(By.XPATH, "//label[@for='input-agree']")
+    label_agree.click()
+
+    check_agree = driver.find_element(By.XPATH, "//input[@name='agree' and @value='1']")
+    if check_agree.is_selected():
+        print("Checkbox is selected.")
+    else:
+        print("Checkbox is NOT selected.")
+    assert check_agree.is_selected()
 
     # Continue with registration
     continue_btn = driver.find_element(By.XPATH, '//body/div[1]/div[5]/div[1]/div[1]/div[1]/form[1]/div[1]/div[1]/input[1]')
@@ -120,16 +141,28 @@ def test_mismatched_passwords_registration(driver):
     input_email.send_keys("naufal2@gmail.com")
     input_telp.send_keys("873627572")
     input_password.send_keys("password123")
-    input_confirm_password.send_keys("password134   ")
+    input_confirm_password.send_keys("password134")
 
     # Select options
-    rd_btn = driver.find_element(By.XPATH, "//label[contains(text(),'Yes')]")
-    rd_btn.click()
-    print("Select Yes", rd_btn.is_selected())
+    label = driver.find_element(By.XPATH, "//label[normalize-space()='Yes']")
+    label.click()
 
-    check_btn = driver.find_element(By.XPATH, "//body/div[1]/div[5]/div[1]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/label[1]")
-    check_btn.click()
-    print("Check Agree", check_btn.is_selected())
+    radio = driver.find_element(By.XPATH, "//input[@name='newsletter' and @value='1']")
+    if radio.is_selected():
+        print("Radio is selected.")
+    else:
+        print("Radiio is NOT selected.")
+    assert radio.is_selected()
+
+    label_agree = driver.find_element(By.XPATH, "//label[@for='input-agree']")
+    label_agree.click()
+
+    check_agree = driver.find_element(By.XPATH, "//input[@name='agree' and @value='1']")
+    if check_agree.is_selected():
+        print("Checkbox is selected.")
+    else:
+        print("Checkbox is NOT selected.")
+    assert check_agree.is_selected()
 
     # Continue with registration
     continue_btn = driver.find_element(By.XPATH, '//body/div[1]/div[5]/div[1]/div[1]/div[1]/form[1]/div[1]/div[1]/input[1]')
