@@ -9,7 +9,7 @@ BASE_URL = ("https://ecommerce-playground.lambdatest.io/index.php?route=account/
 
 FIRST_NAME = ("Naufal")
 LAST_NAME = ("Azhar")
-EMAIL = ("naufalazhar858@gmail.com")
+EMAIL = ("naufalazhar8542@gmail.com")
 TELP = ("08161363")
 PASSWORD = ("123456")
 CONFIRM_PASSWORD = ("123456")
