@@ -12,12 +12,13 @@ def driver():
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--ignore-certificate-errors")
     options.add_argument("--ignore-ssl-errors")
+    
 
     driver = webdriver.Chrome(
         service=ChromeService(ChromeDriverManager().install()),
         options=options
     )
-    
+
 
     driver.implicitly_wait(10)
     yield driver
