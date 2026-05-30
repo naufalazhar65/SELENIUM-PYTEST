@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Trigger automation repo
         run: |
-          curl -X POST https://api.github.com/repos/https://github.com/naufalazhar65/cobacoba.git/dispatches \
+          curl -X POST https://api.github.com/repos/naufalazhar65/cobacoba/dispatches \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
           -d '{
